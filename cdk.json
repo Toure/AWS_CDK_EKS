@@ -1,0 +1,14 @@
+{
+    "app": "npx ts-node --prefer-ts-exts bin/eks-cluster.ts",
+    "context": {
+      "eks-addon-vpc-cni-version": "v1.15.1-eksbuild.1",
+      "eks-addon-coredns-version": "v1.10.1-eksbuild.4",
+      "cluster-autoscaler-helm-version": "9.29.4",
+      "eks-addon-kube-proxy-version": "v1.27.3-eksbuild.2",
+      "aws-load-balancer-controller-helm-version": "1.6.1",
+      "aws-ebs-csi-driver-helm-version": "2.17.1",
+      "aws-efs-csi-driver-helm-version": "2.5.0",
+      "secrets-store-csi-helm-version": "0.3.4",
+      "cluster_name" : "nextera-eks-cluster"
+    }
+  }
