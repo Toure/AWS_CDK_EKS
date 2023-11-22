@@ -1,5 +1,5 @@
 {
-  "name": "eks-cdk",
+  "name": "aws-cdk-eks",
   "version": "0.2.0",
   "bin": {
     "eks-cdk-js": "bin/eks-cluster.ts"

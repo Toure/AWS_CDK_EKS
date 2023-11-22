@@ -4,6 +4,7 @@ import { Construct } from 'constructs';
 import { Ekstack } from '../lib/eks-cluster-stack';
 import { K8sBaselineStack } from '../lib/k8s-baseline';
 import { K8snodegroups } from '../lib/k8s-nodegroup';
+import {RDSDataStack} from "../lib/rds-database-stack";
 
 const DEFAULT_CONFIG = {
   env: {
@@ -14,24 +15,32 @@ const DEFAULT_CONFIG = {
 
 const app = new App();
 const prefix = stackPrefix(app);
-const eks = new Ekstack(app, 'EKSStack', ({
+const eks = new Ekstack(app, 'EKSStack', {
   env: DEFAULT_CONFIG.env,
   stackName: `${prefix}EKSStack`,
-}));
+});
 
-const nodegroups = new K8snodegroups(app, 'EKSNodeGroups', ({
+const nodegroups = new K8snodegroups(app, 'EKSNodeGroups', {
   env: DEFAULT_CONFIG.env,
   stackName: `${prefix}EKSNodeGroups`,
   eksCluster: eks.cluster,
   nodeGroupRole: eks.createNodegroupRole('nodeGroup1'),
-}));
+});
 
-const k8sbase = new K8sBaselineStack(app, 'EKSK8sBaseline', ({
+const k8sbase = new K8sBaselineStack(app, 'EKSK8sBaseline', {
   env: DEFAULT_CONFIG.env,
   stackName: `${prefix}EKSK8sBaseline`,
   eksCluster: eks.cluster,
-}));
+});
 
+const rdsdatabase = new RDSDataStack(app, 'RDSDataStack', {
+  env: DEFAULT_CONFIG.env,
+  stackName: `${prefix}RDSDataStack`,
+  eksCluster: eks.cluster,
+});
+
+// Link all the stacks in as deps
+rdsdatabase.addDependency(k8sbase);
 k8sbase.addDependency(nodegroups);
 nodegroups.addDependency(eks);
 

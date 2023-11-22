@@ -1,7 +1,13 @@
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import {CfnJson} from 'aws-cdk-lib';
-import {FlowLogDestination, GatewayVpcEndpointAwsService, IVpc, Port, SecurityGroup, Vpc} from 'aws-cdk-lib/aws-ec2';
+import {
+  FlowLogDestination,
+  GatewayVpcEndpointAwsService,
+  Port,
+  SecurityGroup,
+  Vpc
+} from 'aws-cdk-lib/aws-ec2';
 import {
   AwsAuth,
   CfnAddon,
@@ -50,7 +56,7 @@ export class Ekstack extends cdk.Stack {
     // Recommended to use connections to manage ingress/egress for security groups
     // fpl_cluster_SecurityGroup.connections.allowTo(Peer.anyIpv4(), Port.tcp(443), 'Outbound to 443 only');
     // TODO: Remove this as this SG is to wide open
-    fpl_cluster_SecurityGroup.connections.allowFromAnyIpv4(Port.allTcp());
+    // fpl_cluster_SecurityGroup.connections.allowFromAnyIpv4(Port.allTcp());
 
     // Create Admin IAM Role and Policies for EKS cluster
     // https://docs.aws.amazon.com/eks/latest/userguide/security_iam_id-based-policy-examples.html#policy_example3
@@ -188,6 +194,7 @@ export class Ekstack extends cdk.Stack {
           ClusterLoggingTypes.AUTHENTICATOR,
           ClusterLoggingTypes.SCHEDULER,
       ]
+
     });
 
     // Allow BastionHost security group access to EKS Control Plane
@@ -269,7 +276,7 @@ export class Ekstack extends cdk.Stack {
     return role;
   }
 
-  private getVpc(scope: Construct): IVpc {
+  private getVpc(scope: Construct) {
     // retrieve vpc id from the cli keyname: use_vpc_id=xxxxxxx
     const stack = cdk.Stack.of(scope);
     return Vpc.fromLookup(stack, 'EKSNetworking', { vpcId: stack.node.tryGetContext('use_vpc_id') });

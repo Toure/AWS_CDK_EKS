@@ -9,6 +9,18 @@
       "aws-ebs-csi-driver-helm-version": "2.17.1",
       "aws-efs-csi-driver-helm-version": "2.5.0",
       "secrets-store-csi-helm-version": "0.3.4",
-      "cluster_name" : "nextera-eks-cluster"
-    }
+      "cluster_name" : "nextera-eks-cluster",
+      "aws-cdk:use-lazy-create": "true",
+      "aws-cdk:enable-stack-name-rewrite": "true",
+      "@aws-cdk/core:newStyleStackSynthesis": "true",
+      "aws-cdk:cloudformation:use-unsupported-true-when-destroying": "true",
+      "aws-cdk:trust-bootstrap": {
+        "bootstrapStackName": "NexusEksCluster",
+        "roleArn": "arn:aws:iam::499845780302:role/DevOps_CDK"
+      }
+    },
+  "env": {
+    "region": "us-east-1",
+    "account": "499845780302"
   }
+}
