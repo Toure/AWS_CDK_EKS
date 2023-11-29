@@ -1,9 +1,9 @@
 import * as cdk from 'aws-cdk-lib';
-import { CfnParameter, Fn } from 'aws-cdk-lib';
-import { CfnLaunchTemplate, MultipartBody, MultipartUserData, UserData } from 'aws-cdk-lib/aws-ec2';
-import { Cluster, Nodegroup } from 'aws-cdk-lib/aws-eks';
-import {Role, ManagedPolicy } from 'aws-cdk-lib/aws-iam';
-import { Construct } from 'constructs';
+import {CfnParameter, Fn} from 'aws-cdk-lib';
+import {CfnLaunchTemplate, MultipartBody, MultipartUserData, SubnetType, UserData} from 'aws-cdk-lib/aws-ec2';
+import {Cluster, Nodegroup} from 'aws-cdk-lib/aws-eks';
+import {ManagedPolicy, Role} from 'aws-cdk-lib/aws-iam';
+import {Construct} from 'constructs';
 
 interface k8snodegroupsProps extends cdk.StackProps {
   eksCluster: Cluster,
@@ -84,6 +84,9 @@ export class K8snodegroups extends cdk.Stack {
     (() => new Nodegroup(this, 'fpl-nexus-nodegroup', {
       cluster: props.eksCluster,
       nodegroupName: 'fpl-nexus-nodegroup',
+      subnets: {
+        subnetType: SubnetType.PRIVATE_WITH_EGRESS,
+      },
       nodeRole: props.nodeGroupRole,
       maxSize: nodegroupMax.valueAsNumber,
       desiredSize: nodegroupCount.valueAsNumber,

@@ -23,9 +23,9 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@aws-cdk/lambda-layer-kubectl-v27": "^2.0.0",
-    "aws-cdk-lib": "^2.107.0",
-    "cdk": "^2.107.0",
+    "@aws-cdk/lambda-layer-kubectl-v28": "^2.1.0",
+    "aws-cdk-lib": "^2.110.1",
+    "cdk": "^2.110.1",
     "constructs": "^10.3.0",
     "js-yaml": "^4.1.0"
   }

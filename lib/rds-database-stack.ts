@@ -9,16 +9,16 @@ import {
     SubnetType,
 } from "aws-cdk-lib/aws-ec2";
 import { Credentials, DatabaseInstance, DatabaseInstanceEngine, PostgresEngineVersion } from "aws-cdk-lib/aws-rds";
-import {Secret} from "aws-cdk-lib/aws-secretsmanager";
+import {ISecretAttachmentTarget, Secret} from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 import {Cluster} from "aws-cdk-lib/aws-eks";
-// import {AccessKey, User} from "aws-cdk-lib/aws-iam";
 
 interface RDSDataStackProps extends StackProps {
     eksCluster: Cluster,
 }
 
 export class RDSDataStack extends Stack {
+    private dbInstance: ISecretAttachmentTarget;
     constructor(scope: Construct, id: string, props: RDSDataStackProps) {
         super(scope, id, props);
 
@@ -26,17 +26,15 @@ export class RDSDataStack extends Stack {
         const instanceType = InstanceType.of(InstanceClass.T3, InstanceSize.MICRO);
         const port = 5432;
         const dbName = "nexus3";
-        // const user = new User(this, 'User');
-        // const accessKey = new AccessKey(this, 'AccessKey', { user });
 
         // create database master user secret and store it in Secrets Manager
+        // TODO: We should store this information somewhere outside of the codebase
         const masterUserSecret = new Secret(this, "db-master-user-secret", {
             secretName: "db-master-user-secret",
             description: "Database master user credentials",
             generateSecretString: {
                 secretStringTemplate: JSON.stringify({ username: "postgres" }),
                 generateStringKey: "password",
-                // generateStringKey: accessKey.secretAccessKey.toString(),
                 passwordLength: 16,
                 excludePunctuation: true,
             },
@@ -72,6 +70,6 @@ export class RDSDataStack extends Stack {
         });
 
         // DB connection settings will be appended to this secret (host, port, etc.)
-        masterUserSecret.attach(dbInstance);
+        // masterUserSecret.attach(this.dbInstance);
     }
 }
